@@ -2,15 +2,13 @@ import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { ChatGroq } from '@langchain/groq';
-/* import dotenv from 'dotenv';
+import { Ollama } from '@langchain/ollama';
+import dotenv from 'dotenv'
+import path from 'path'
+dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
-dotenv.config();
-
-console.log("Loaded ENV:", process.env.GROQ_API_KEY); */
-
-const llm = new ChatGroq({
-    apiKey:'',
-    model: "mixtral-8x7b-32768",
+const llm = new Ollama({
+    model: "llama3.2",
     temperature: 0.7,
 }); 
 
@@ -23,6 +21,8 @@ const prompt_template_1 = ChatPromptTemplate.fromMessages([
     new AIMessage("Of course! What do you need help with?"),
     new HumanMessage("Tell me a joke about {topic}."), */
 ])
+
+console.log(await prompt_template_1.format({user_input : 'how s the weather today'})) // returning the prompt format
 
 // ' .fromTemplate ' takes one string , telling the llm what to do
 const prompt_template_2 = ChatPromptTemplate.fromTemplate(
@@ -40,10 +40,14 @@ const chain_2 = prompt_template_2.pipe(llm)
 ]) */
 
 // getting the final response
-const result_1 = await chain_1.invoke({
+const result_1 = await chain_1.stream({ // stream method allows you to generate text token-by-token (for better UX)
     user_input: 'who are you ?' ,
 })
 const result_2 = await chain_2.invoke({
     sport: ' tennis ' ,
 })
+
+for await (const chunk of result_1) {
+    console.log(chunk)
+}
 

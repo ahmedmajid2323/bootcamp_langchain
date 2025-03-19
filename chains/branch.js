@@ -3,9 +3,11 @@ import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { RunnableBranch, RunnableSequence } from "@langchain/core/runnables";
 import { ChatGroq } from "@langchain/groq";
+import dotenv from 'dotenv'
+import path from 'path'
+dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
 const llm = new ChatGroq({
-    apiKey:'',
     model: "mixtral-8x7b-32768",
     temperature: 0.7,
 }); 

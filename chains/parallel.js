@@ -2,9 +2,11 @@ import { RunnableLambda, RunnableParallel } from "@langchain/core/runnables";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatGroq } from "@langchain/groq";
 import { CommaSeparatedListOutputParser, StringOutputParser } from "@langchain/core/output_parsers";
+import dotenv from 'dotenv'
+import path from 'path'
+dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
 const llm = new ChatGroq({
-    apiKey:'',
     model: "mixtral-8x7b-32768",
     temperature: 0.7,
 }); 

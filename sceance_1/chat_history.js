@@ -2,9 +2,11 @@ import { SystemMessage } from "@langchain/core/messages";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 import { ChatGroq } from "@langchain/groq";
 import readline from "readline";
+import dotenv from 'dotenv'
+import path from 'path'
+dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
 const llm = new ChatGroq({
-    apiKey:'',
     model: "mixtral-8x7b-32768",
     temperature: 0.7,
 })
@@ -16,6 +18,7 @@ const prompt = ChatPromptTemplate.fromMessages([
     ['human','{input}']
 ])
 
+// here we are using readline library just so we can have a conversation in the terminal 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -34,7 +37,7 @@ async function chat() {
         }
 
         try {
-            chat_history.push({ role: "user", content: input })
+            chat_history.push({ role: "user", content: input }) // adding the conversation to the chat_history array
             const response = await chain.invoke({
                 chat_history ,
                 input

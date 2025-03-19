@@ -3,12 +3,11 @@ import { ChatGroq } from '@langchain/groq';
 import { BufferMemory , ConversationSummaryMemory , ConversationSummaryBufferMemory } from 'langchain/memory';
 import { ConversationChain } from 'langchain/chains';
 import readline from 'readline';
-import dotenv from "dotenv"
-
-dotenv.config()
+import dotenv from 'dotenv'
+import path from 'path'
+dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
 const llm = new ChatGroq({
-    apiKey: '',
     model: 'mixtral-8x7b-32768',
     temperature: 0.7,
 });
@@ -20,12 +19,12 @@ const memory = new BufferMemory({
     memoryKey: 'chat_history', 
 });
 
-
 // this type of memory Continually summarizes the conversation history ==> returns a summary of the chat history
 /* const memory = new ConversationSummaryMemory({ 
     llm,
     returnMessages: true, 
     memoryKey: 'chat_history', 
+
 }); */
 
 // combines (bufferMemory & ConversationSummaryMemory) = stores the chat history in memory during runtime + maintains a summary of the conversation
