@@ -24,7 +24,7 @@ In this project, we dive into the exciting world of **LangChain**, **Agentic AI*
 
 ### 1️⃣ Clone the repository:
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
+git clone https://github.com/ahmedmajid2323/bootcamp_langchain.git
 ```
 
 ### 2️⃣ Install dependencies:
