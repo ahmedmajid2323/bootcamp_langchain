@@ -7,8 +7,8 @@ import dotenv from 'dotenv'
 import path from 'path'
 dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
-const llm = new Ollama({
-    model: "llama3.2",
+const llm = new ChatGroq({
+    model: "mixtral-8x7b-32768",
     temperature: 0.7,
 }); 
 

@@ -20,28 +20,12 @@ const prompt = ChatPromptTemplate.fromMessages([
 
 const parser = new CommaSeparatedListOutputParser() // this output parser returns a list
 
-const guess_the_meal = new RunnableLambda({
-    func : async (output)=>{
-        const ingredients = output.join(',') // converting the list to a string
-        console.log('the ingredients :', output)
-
-        //here we are creating a chain to generate meals ideas for the provided ingredients
-        const prompt = ChatPromptTemplate.fromTemplate(
-            'given this list of ingredients {ingredients} , can you tell the possible meals i can prepare with it ?'
-        )
-        const chain = prompt.pipe(llm)
-        const answear = await chain.invoke({ingredients})
-
-        return answear.content
-    }
-})
-
-// defini the extended chain ==> each output is the input of the next element !!
+// defining the extended chain ==> each output is the input of the next element !!
 const chain = RunnableSequence.from([
     prompt,
     llm,
     parser,
-    guess_the_meal
+    // add a fucntion (chain) that generates meals ideas for the provided ingredients
 ])
 
 // finally invoking the chain to get the final result 

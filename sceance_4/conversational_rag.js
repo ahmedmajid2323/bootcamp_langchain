@@ -45,6 +45,9 @@ const vectorStore = await MemoryVectorStore.fromDocuments(splitted_docs , embedd
 
 const retriever = vectorStore.asRetriever(); 
 
+// this prompt helps llm that it should reformulate the Question of the user based on the chat history to make it stands for its own
+// llm re-writes a stand alone quesry
+// example ( user : how old is he when he died ? ) ==> reformulate based on chat_history ( llm : how old is King Arthur when he died ? )
 const contextualizeQSystemPrompt =
 "Given a chat history and the latest user question " +
 "which might reference context in the chat history, " +
@@ -58,13 +61,16 @@ const contextualizeQPrompt = ChatPromptTemplate.fromMessages([
   ["human", "{input}"],
 ]);
 
+// this retriever rephrases the user's last input into the stand alone query
+// and uses this query to **fetch** the most relevant docs from the VectorStore
 const historyAwareRetriever = await createHistoryAwareRetriever({
   llm,
   retriever,
   rephrasePrompt: contextualizeQPrompt,
 });
 
-const systemPrompt =
+// defining the Q&A prompt to tell the LLM to answear the user's question based on the context provided (the one retrieved from historyAwareRetriever)
+const QAsystemPrompt =
   "You are an assistant for question-answering tasks. " +
   "Use the following pieces of retrieved context to answer " +
   "the question. If you don't know the answer, say that you " +
@@ -74,19 +80,22 @@ const systemPrompt =
   "{context}";
 
 const qaPrompt = ChatPromptTemplate.fromMessages([
-  ["system", systemPrompt],
+  ["system", QAsystemPrompt],
   new MessagesPlaceholder("chat_history"),
   ["human", "{input}"],
 ]);
 
+// createStuffDocumentsChain ==> a chain that stuffs all retrieved doc into the qaPrompt
+// it will take the retrieved doc from historyAwareRetriever and combine them into a single context : {context}
 const questionAnswerChain = await createStuffDocumentsChain({
   llm,
   prompt: qaPrompt,
 });
 
+// defining the final chain historyAwareRetriever => questionAnswerChain 
 const ragChain = await createRetrievalChain({
-  retriever: historyAwareRetriever,
-  combineDocsChain: questionAnswerChain,
+  retriever: historyAwareRetriever, // rephrase + fetch
+  combineDocsChain: questionAnswerChain, // generate answear using retrieved docs
 });
 
   console.log("Start chatting with the AI! Type 'exit' to end the conversation.");

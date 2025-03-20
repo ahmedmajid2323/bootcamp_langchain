@@ -8,7 +8,7 @@ import { ChatGroq } from '@langchain/groq';
 import readline from 'readline';
 dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
-// definig the tools ==> prompt engineering ==> define the agent (ll , tools , memory) ==> execute the agent
+// definig the tools ==> prompt engineering ==> define the agent (llm , tools , memory) ==> execute the agent
 
 const llm = new ChatGroq({
     model: "mixtral-8x7b-32768", 
@@ -56,6 +56,8 @@ const memory = new BufferMemory({
   outputKey: "output",
 });
 
+// ReAct agent ? => Reaseoning and Acting : it's all about structuring the agents workflow
+// 1st reason (chain of thoughts) then act (invoke external tools or use general knowledge)
 const agent = await createReactAgent({
     llm,
     tools,

@@ -52,7 +52,7 @@ const response = await json_chain.invoke({query : 'Tell me a joke about software
 
 // **4 : StructuredOutputParser => Enforces a specific schema or structure on the output.
 const schema = z.object({
-    meal : z.string().describe('the name of the meal') ,
+    origin : z.string().describe('the origin of the meal, where it comes from') ,
     recipe : z.array(z.string()).describe('the necessary ingrediants for the meal') ,
 })
 
@@ -65,8 +65,9 @@ const prompt = ChatPromptTemplate.fromTemplate(
 const chain = prompt.pipe(llm).pipe(parser)
 
 const result = await chain.invoke({
-    user_input : 'ojja' ,
+    user_input : 'bruscheta' ,
     format_instruction : parser.getFormatInstructions() ,
 })
 
+console.log(result)
 

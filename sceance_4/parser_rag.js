@@ -1,5 +1,4 @@
-
-import { Ollama, OllamaEmbeddings } from "@langchain/ollama";import { z } from "zod";
+import { OllamaEmbeddings } from "@langchain/ollama";import { z } from "zod";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
